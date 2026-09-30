@@ -1,0 +1,7 @@
+# Artefatos de compilação Java
+/bin/
+*.class
+
+# Arquivos locais do sistema operacional
+.DS_Store
+Thumbs.db

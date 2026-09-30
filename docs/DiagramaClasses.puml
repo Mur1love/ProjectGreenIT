@@ -1,0 +1,129 @@
+@startuml DiagramaClasses
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam nodesep 40
+skinparam ranksep 60
+title Diagrama de Classes — Sistema de Monitoramento de TI Verde
+
+interface ConsomeEnergia {
+    +calcularConsumoMensal() : double
+}
+
+interface Reciclavel {
+    +calcularPegadaCarbono() : double
+}
+
+abstract class Equipamento {
+    - nome : String
+    - patrimonio : String
+    - potenciaWatts : double
+    +Equipamento(nome : String, patrimonio : String, potenciaWatts : double)
+    +exibirDados() : void
+    +{abstract} calcularConsumoMensal() : double
+    +getNome() : String
+    +setNome(nome : String) : void
+    +getPatrimonio() : String
+    +setPatrimonio(patrimonio : String) : void
+    +getPotenciaWatts() : double
+    +setPotenciaWatts(potenciaWatts : double) : void
+}
+
+note bottom of Equipamento
+    Setters de atributos numericos
+    rejeitam valores negativos:
+    mantem o valor anterior
+    e imprimem aviso no console.
+end note
+
+abstract class EquipamentoEletronico {
+    - fatorEmissaoCO2 : double
+    +EquipamentoEletronico(nome : String, patrimonio : String, potenciaWatts : double)
+    +getFatorEmissaoCO2() : double
+    +setFatorEmissaoCO2(fatorEmissaoCO2 : double) : void
+}
+
+class Iluminacao {
+    - percentualEconomiaLED : double
+    +Iluminacao(nome : String, patrimonio : String, potenciaWatts : double, percentualEconomiaLED : double)
+    +calcularConsumoMensal() : double
+    +getPercentualEconomiaLED() : double
+    +setPercentualEconomiaLED(percentualEconomiaLED : double) : void
+}
+
+class Computador {
+    +Computador(nome : String, patrimonio : String, potenciaWatts : double)
+    +calcularConsumoMensal() : double
+    +calcularPegadaCarbono() : double
+}
+
+class Servidor {
+    - cargaProcessamento : double
+    +Servidor(nome : String, patrimonio : String, potenciaWatts : double, cargaProcessamento : double)
+    +calcularConsumoMensal() : double
+    +getCargaProcessamento() : double
+    +setCargaProcessamento(cargaProcessamento : double) : void
+}
+
+class VeiculoEletrico {
+    - nome : String
+    - kmRodadosMes : double
+    - consumoPorKm : double
+    +VeiculoEletrico(nome : String, kmRodadosMes : double, consumoPorKm : double)
+    +calcularConsumoMensal() : double
+    +getNome() : String
+    +setNome(nome : String) : void
+    +getKmRodadosMes() : double
+    +setKmRodadosMes(kmRodadosMes : double) : void
+    +getConsumoPorKm() : double
+    +setConsumoPorKm(consumoPorKm : double) : void
+}
+
+class "javax.swing.JFrame" as JFrame <<external>>
+
+class TelaMonitoramentoTIVerde {
+    - equipamentos : ArrayList<ConsomeEnergia>
+    - txtNome : JTextField
+    - txtPatrimonio : JTextField
+    - txtPotencia : JTextField
+    - txtExtra1 : JTextField
+    - txtExtra2 : JTextField
+    - cbTipoEquipamento : JComboBox<String>
+    - table : JTable
+    - lblTotalConsumo : JLabel
+    - lblPegadaCarbono : JLabel
+    +TelaMonitoramentoTIVerde()
+    -adicionarEquipamento() : void
+    -atualizarCamposPorTipo() : void
+    -calcularConsumoTotal() : void
+    -calcularPegadaCarbono() : void
+    -exibirDadosSelecionado() : void
+    -lerNumero(campo : JTextField, rotulo : String, maximo : double) : Double
+    +{static} main(args : String[]) : void
+}
+
+class TesteModelo {
+    +{static} main(args : String[]) : void
+}
+
+ConsomeEnergia <|.. Equipamento
+ConsomeEnergia <|.. VeiculoEletrico
+Reciclavel <|.. Computador
+
+Equipamento <|-- EquipamentoEletronico
+Equipamento <|-- Iluminacao
+EquipamentoEletronico <|-- Computador
+EquipamentoEletronico <|-- Servidor
+
+JFrame <|-- TelaMonitoramentoTIVerde
+TelaMonitoramentoTIVerde o-- "0..*" ConsomeEnergia : equipamentos >
+TelaMonitoramentoTIVerde ..> Computador : <<create>>
+TelaMonitoramentoTIVerde ..> Servidor : <<create>>
+TelaMonitoramentoTIVerde ..> Iluminacao : <<create>>
+TelaMonitoramentoTIVerde ..> VeiculoEletrico : <<create>>
+
+TesteModelo ..> Computador : <<use>>
+TesteModelo ..> Servidor : <<use>>
+TesteModelo ..> Iluminacao : <<use>>
+TesteModelo ..> VeiculoEletrico : <<use>>
+
+@enduml

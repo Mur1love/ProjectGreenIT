@@ -1,0 +1,62 @@
+@startuml DiagramaClassesSimples
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam nodesep 60
+skinparam ranksep 80
+title Diagrama de Classes (simplificado) — Sistema de Monitoramento de TI Verde
+
+interface ConsomeEnergia {
+    +calcularConsumoMensal() : double
+}
+
+interface Reciclavel {
+    +calcularPegadaCarbono() : double
+}
+
+abstract class Equipamento {
+    - nome : String
+    - patrimonio : String
+    - potenciaWatts : double
+    +exibirDados() : void
+    +{abstract} calcularConsumoMensal() : double
+}
+
+abstract class EquipamentoEletronico {
+    - fatorEmissaoCO2 : double
+}
+
+class Computador {
+    +calcularConsumoMensal() : double
+    +calcularPegadaCarbono() : double
+}
+
+class Servidor {
+    - cargaProcessamento : double
+    +calcularConsumoMensal() : double
+}
+
+class Iluminacao {
+    - percentualEconomiaLED : double
+    +calcularConsumoMensal() : double
+}
+
+class VeiculoEletrico {
+    - kmRodadosMes : double
+    - consumoPorKm : double
+    +calcularConsumoMensal() : double
+}
+
+class TelaMonitoramentoTIVerde
+
+ConsomeEnergia <|.. Equipamento
+ConsomeEnergia <|.. VeiculoEletrico
+Reciclavel <|.. Computador
+
+Equipamento <|-- EquipamentoEletronico
+Equipamento <|-- Iluminacao
+EquipamentoEletronico <|-- Computador
+EquipamentoEletronico <|-- Servidor
+
+TelaMonitoramentoTIVerde o-- "0..*" ConsomeEnergia : lista
+
+@enduml
